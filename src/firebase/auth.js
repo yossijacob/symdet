@@ -31,7 +31,6 @@ class FireBaseAuthUI extends Component {
   }
 
   render() {
-    const { fullScreen } = this.props;
     return (
       <div id="firebaseui-auth-container"></div>
     )

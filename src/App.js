@@ -64,10 +64,10 @@ class App extends Component {
                 </Typography>
                 </Toolbar>
               </AppBar>
-              {/* <Switch>
+              <Switch>
                 <Route exact path="/" component={Symlog} />
                 <Route path="/symlog" component={Symlog} />
-              </Switch> */}
+              </Switch>
             </div>
           }
 
