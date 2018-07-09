@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
 
-import AddEventDialog from './AddEventDialog'
+import LogSymptomDialog from './LogSymptomDialog'
 
 const styles = theme => ({
     addButton: {
@@ -24,7 +23,7 @@ class SymLog extends Component {
     };
 
     render() {
-        const { classes, match } = this.props;
+        const { classes } = this.props;
         
         return (
             <div>
@@ -32,7 +31,7 @@ class SymLog extends Component {
                 <Button variant="fab" color="primary" aria-label="add" className={classes.addButton}>
                     <AddIcon onClick={ () => this.toggleAddDialog(true)}/>
                 </Button>
-                <AddEventDialog open={this.state.addDialogOpen} toggleDialog={this.toggleAddDialog}/>
+                <LogSymptomDialog open={this.state.addDialogOpen} toggleDialog={this.toggleAddDialog}/>
             </div>
         )
     }

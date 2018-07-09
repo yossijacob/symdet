@@ -18,7 +18,8 @@ var uiConfig = {
   tosUrl: '<your-tos-url>'
 };
 
-const ui = new firebaseui.auth.AuthUI(firebase.auth());
+export const auth = firebase.auth();
+const ui = new firebaseui.auth.AuthUI(auth);
 
 class FireBaseAuthUI extends Component {
   componentDidMount() {

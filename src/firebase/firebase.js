@@ -1,5 +1,5 @@
 import firebase from 'firebase/app';
-// import 'firebase/auth';
+import firestore from 'firebase/firestore'
 
 // Initialize Firebase
 var config = {
@@ -13,7 +13,10 @@ var config = {
 
 firebase.initializeApp(config);
 
-
+// Initialize Cloud Firestore through Firebase
+export const db = firebase.firestore();
+const settings = {/* your settings... */ timestampsInSnapshots: true};
+db.settings(settings);
 
 // const auth = firebase.auth();
 

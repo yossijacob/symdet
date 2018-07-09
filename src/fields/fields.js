@@ -1,6 +1,7 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid';
 import Slider from '@material-ui/lab/Slider';
+import AutoSuggest from './AutoSuggest'
 
 
 export const SliderField = ({name, label, range, value, onChange,}) => {
@@ -17,9 +18,14 @@ export const SliderField = ({name, label, range, value, onChange,}) => {
     )
 }
 
+
+
+
 export const fieldTypes = {
     slider: SliderField,
+    autoSuggest: AutoSuggest,
 }
+
 
 
 export const Field = (props) => {
