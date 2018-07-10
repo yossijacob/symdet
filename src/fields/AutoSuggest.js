@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import keycode from 'keycode';
 import Downshift from 'downshift';
 import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -108,7 +109,7 @@ class DownshiftMultiple extends React.Component {
             selectedItem,
         });
         // console.log(this.props);
-        this.props.onChange(this.props.name)('AutoSuggestHandleChange',selectedItem);  // update outside state
+        this.props.onChange(this.props.name)('AutoSuggestHandleChange', selectedItem);  // update outside state
     };
 
     handleAdd = () => {
@@ -124,67 +125,69 @@ class DownshiftMultiple extends React.Component {
     };
 
     render() {
-        const { classes, label, tags, helperText } = this.props;
+        const { classes, label, tagsSet, helperText } = this.props;
         const { inputValue, selectedItem } = this.state;
 
         return (
-            <Downshift inputValue={inputValue} onChange={this.handleChange} selectedItem={selectedItem}>
-                {({
-                    getInputProps,
-                    getItemProps,
-                    isOpen,
-                    inputValue: inputValue2,
-                    selectedItem: selectedItem2,
-                    highlightedIndex,
-                }) => (
-                        <div className={classes.container}>
-                            {renderInput({
-                                fullWidth: true,
-                                classes,
-                                helperText:helperText,
-                                InputProps: getInputProps({
-                                    startAdornment: selectedItem.map(item => (
-                                        <Chip
-                                            key={item}
-                                            tabIndex={-1}
-                                            label={item}
-                                            className={classes.chip}
-                                            onDelete={this.handleDelete(item)}
-                                        />
-                                    )),
-                                    onChange: this.handleInputChange,
-                                    onKeyDown: this.handleKeyDown,
-                                    placeholder: label,
-                                    id: 'integration-downshift-multiple',
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                aria-label="Add"
-                                                onClick={this.handleAdd}
+            <Grid container alignItems='center' item>
+                <Downshift inputValue={inputValue} onChange={this.handleChange} selectedItem={selectedItem}>
+                    {({
+                        getInputProps,
+                        getItemProps,
+                        isOpen,
+                        inputValue: inputValue2,
+                        selectedItem: selectedItem2,
+                        highlightedIndex,
+                    }) => (
+                            <div className={classes.container}>
+                                {renderInput({
+                                    fullWidth: true,
+                                    classes,
+                                    helperText: helperText,
+                                    InputProps: getInputProps({
+                                        startAdornment: selectedItem.map(item => (
+                                            <Chip
+                                                key={item}
+                                                tabIndex={-1}
+                                                label={item}
+                                                className={classes.chip}
+                                                onDelete={this.handleDelete(item)}
+                                            />
+                                        )),
+                                        onChange: this.handleInputChange,
+                                        onKeyDown: this.handleKeyDown,
+                                        placeholder: label,
+                                        id: 'integration-downshift-multiple',
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    aria-label="Add"
+                                                    onClick={this.handleAdd}
                                                 // onMouseDown={this.handleInputChange}
-                                            >
-                                                <AddIcon />
-                                            </IconButton>
-                                        </InputAdornment>
-                                    )
-                                }),
-                            })}
-                            {isOpen ? (
-                                <Paper className={classes.paper} square>
-                                    {getSuggestions(inputValue2, tags).map((suggestion, index) =>
-                                        renderSuggestion({
-                                            suggestion,
-                                            index,
-                                            itemProps: getItemProps({ item: suggestion }),
-                                            highlightedIndex,
-                                            selectedItem: selectedItem2,
-                                        }),
-                                    )}
-                                </Paper>
-                            ) : null}
-                        </div>
-                    )}
-            </Downshift>
+                                                >
+                                                    <AddIcon />
+                                                </IconButton>
+                                            </InputAdornment>
+                                        )
+                                    }),
+                                })}
+                                {isOpen ? (
+                                    <Paper className={classes.paper} square>
+                                        {getSuggestions(inputValue2, tagsSet).map((suggestion, index) =>
+                                            renderSuggestion({
+                                                suggestion,
+                                                index,
+                                                itemProps: getItemProps({ item: suggestion }),
+                                                highlightedIndex,
+                                                selectedItem: selectedItem2,
+                                            }),
+                                        )}
+                                    </Paper>
+                                ) : null}
+                            </div>
+                        )}
+                </Downshift>
+            </Grid>
         );
     }
 }

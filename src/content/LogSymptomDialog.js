@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import firebase from 'firebase'
-import { db } from './firebase/firebase'
+import { db } from '../firebase/firebase'
 import Grid from '@material-ui/core/Grid';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -10,7 +10,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import Button from '@material-ui/core/Button';
 
-import { Field, fieldTypes } from './fields/fields'
+import { Field, fieldTypes } from '../fields/fields'
 
 
 class LogSymptomDialog extends Component {
@@ -28,14 +28,15 @@ class LogSymptomDialog extends Component {
             if (doc.exists) {
                 const user = doc.data();
                 this.setState({
-                    fields: this.initFields(user.tags)
+                    fields: this.initFields(user.tags),
+                    tagsSet:user.tags,
                 });
             }
         });
     }
 
 
-    initFields = (tags = []) => [
+    initFields = (tagsSet = []) => [
         {
             name: 'hoursSlept',
             type: fieldTypes.slider,
@@ -56,13 +57,14 @@ class LogSymptomDialog extends Component {
             label: 'Tags',
             helperText: 'Add tags of recent events, for example food you eat.',
             value: [],
-            tags: tags
+            tagsSet: tagsSet
         }
     ]
 
     // update fields on change
     handleFieldChange = (name) => {
         return (event, value) => {
+            console.log(name,value);
             this.setState(prevState => ({
                 fields: prevState.fields.map((field) =>
                     field.name === name ?
@@ -75,12 +77,17 @@ class LogSymptomDialog extends Component {
 
     submit = () => {
         const data = this.state.fields.reduce((obj, item) => (obj[item.name] = item.value, obj), {});
-        const metaData = { tags: data.tags };
+        console.log(this.state.fields);
+        console.log(data);
+       
+        const tags = this.state.fields.tags;
+        const metaData = {tags:[...new Set(this.state.tagsSet.concat(data.tags))]}; // merge new tags
+        console.log(metaData);
         data.timestamp = firebase.firestore.FieldValue.serverTimestamp()
         const self = this;
 
         self.props.toggleDialog(false);
-        this.state.userRef.set(metaData);
+        this.state.userRef.set(metaData, {merge: true});
         this.state.userRef.collection("log").add(data).then(function (docRef) {
 
         }).catch(function (error) {
@@ -105,7 +112,7 @@ class LogSymptomDialog extends Component {
                     Log Symptom
                 </DialogTitle>
                 <DialogContent>
-                    <Grid container spacing={16}>
+                    <Grid container spacing={32}>
                         {this.state.fields.map((field) => {
                             return (
                                 <Field {...field} onChange={this.handleFieldChange} key={field.name} />
