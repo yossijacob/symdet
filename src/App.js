@@ -2,18 +2,18 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 import firebase from 'firebase'
 import { FireBaseAuthUI } from './firebase'
+
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import BottomNav from './content/BottomNav'
-import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AddIcon from '@material-ui/icons/AddCircleOutline';
 
-import LogSymptomDialog from './content/LogSymptomDialog'
-import Splash from './content/Splash'
+import LogSymptomDialog,{ store as logSymptomDialogStore} from './content/LogSymptomDialog'
+import Loading from './content/Loading'
 import Symlog, { SymLogAppBar } from './content/SymLog'
 import Analyze, { AnalyzeAppBar } from './content/Analyze'
 import Calendar, { CalendarAppBar } from './content/Calendar'
@@ -29,9 +29,6 @@ const styles = {
   },
 };
 
-const pageTitles = {
-  symlog: 'Symptom Log'
-}
 
 class App extends Component {
   constructor() {
@@ -39,14 +36,33 @@ class App extends Component {
     this.state = {
       loading: true,
       loggedIn: false,
-      addDialogOpen: false,
+      // addDialogOpen: false,
+      // editLog: null
     };
   }
 
-  toggleAddDialog = (val) => {
-    this.setState({ addDialogOpen: val });
+  openAddDialog = () => {
+    // this.setState({ addDialogOpen: val });
+    // logSymptomDialogStore.open = true;
+    logSymptomDialogStore.openDialog();
   };
 
+  // openEditDialog = (log = null) => {
+  //   logSymptomDialogStore.open = true;
+  //   logSymptomDialogStore.editLog = log;
+  //   // this.setState({
+  //   //   addDialogOpen: log !== null,
+  //   //   editLog: log
+  //   // });
+  // };
+
+  // closeDialog = () => {
+  //   logSymptomDialogStore.open = false;
+  //   // this.setState({
+  //   //   addDialogOpen: false,
+  //   //   editLog: null
+  //   // });
+  // }
   componentDidMount() {
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -67,16 +83,17 @@ class App extends Component {
   render() {
     const { classes } = this.props;
     return (
+
       <Router>
         <div>
           {!this.state.loggedIn ?
             this.state.loading ?
-              <Splash />
+              <Loading />
               :
               <FireBaseAuthUI />
             :
             <div>
-              <AppBar position="static">
+              <AppBar position="sticky">
                 <Toolbar>
                   <IconButton color="inherit" aria-label="Menu" className={classes.menuButton}>
                     <MenuIcon />
@@ -87,23 +104,31 @@ class App extends Component {
                     <Route path="/Analyze" component={AnalyzeAppBar} />
                   </Typography>
                   <IconButton color="inherit" aria-label="Menu">
-                    <AddIcon onClick={() => this.toggleAddDialog(true)} />
+                    <AddIcon onClick={() => this.openAddDialog(true)} />
                   </IconButton>
                 </Toolbar>
               </AppBar>
               <Switch>
-                <Route path="/symlog" component={Symlog} />
+                <Route path="/symlog" render={() =>
+                  <Symlog />
+                } />
                 <Route path="/calendar" component={Calendar} />
                 <Route path="/Analyze" component={Analyze} />
                 <Redirect from='/' to='/symlog' />
               </Switch>
-              <BottomNav/>
-              <LogSymptomDialog open={this.state.addDialogOpen} toggleDialog={this.toggleAddDialog} />
+              <BottomNav />
+              <LogSymptomDialog
+                store = {logSymptomDialogStore}
+                // open={this.state.addDialogOpen}
+                // closeDialog={this.closeDialog}
+                // editLog={this.state.editLog} 
+                />
             </div>
           }
 
         </div>
       </Router>
+
     );
   }
 }

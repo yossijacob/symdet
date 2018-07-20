@@ -11,7 +11,9 @@ const styles = theme => ({
     root: {
         position: 'fixed',
         bottom: '0px',
-        width: '100%'
+        width: '100%',
+        // backgroundColor:theme.palette.secondary.dark,
+        opacity:0.9,
     },
 });
 

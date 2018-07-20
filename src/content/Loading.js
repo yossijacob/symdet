@@ -9,7 +9,7 @@ const styles={
     }
 }
 
-const Splash = ({classes}) => {
+const Loading = ({classes}) => {
   return (
     <Grid container justify='center' alignItems='center' className={classes.container}>
         <Grid item>
@@ -19,4 +19,4 @@ const Splash = ({classes}) => {
   )
 }
 
-export default withStyles(styles)(Splash);
+export default withStyles(styles)(Loading);
